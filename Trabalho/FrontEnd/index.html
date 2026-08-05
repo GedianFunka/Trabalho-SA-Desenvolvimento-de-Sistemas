@@ -1,11 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Move | Locadora de Veículos</title>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h1>Move Locadora</h1>
+        <nav>
+          <a href="#">Início</a>
+          <a href="#">Listar</a>
+          <a href="#">Consultar</a>
+          <a href="#">Editar</a>
+          <a href="#">Entrar</a>
+          <a href="#">Cadastrar</a>
+        </nav>
+      </div>
+      <h2>Comece sua jornada conosco!</h2>
+      <p>Encontre o veículo perfeito para sua próxima aventura.</p>
+      <section class="reserva">
+        <form>
+          <label for="Modelo">Modelo:</label>
+          <input id="Modelo" name="Modelo" type="text" />
+
+          <label for="Data de Inícia">Data de Início:</label>
+          <input id="Data de Inícia" name="Data de Inícia" type="date" />
+
+          <label for="Data de Retirada">Data de Retirada:</label>
+          <input id="Data de Retirada" name="Data de Retirada" type="date" />
+
+          <label for="Idade do Motorista">Idade do Motorista</label>
+          <select>
+            id="Idade do Motorista" name="Idade do Motorista">
+            <option value="18-25">18-25</option>
+            <option value="26-35">26-35</option>
+            <option value="36-45">36-45</option>
+            <option value="46+">46+</option>
+          </select>
+        </form>
+      </section>
+    </div>
+  </body>
 </html>
