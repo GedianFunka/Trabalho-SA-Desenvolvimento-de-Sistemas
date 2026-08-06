@@ -40,12 +40,8 @@ create table locacao(
 create table usuario(
     id_usuarios int auto_increment primary key,
     Usuario varchar(100) not null,
-    Email varchar(250) not null,
+    Email varchar(250) unique not null,
     Senha varchar(10) not null
 );
 insert into usuario(Usuario, Email, Senha)
-values (
-        'Adiministrador',
-        'admin@locadora.com',
-        'Admin123'
-    );
+values ('Administrador','admin@locadora.com','Admin123');
