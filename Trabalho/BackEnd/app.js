@@ -8,7 +8,7 @@ server.use(express.json());
 
 //Tabela veículos
 
-server.get('/veiculos', (res, req)=>{
+server.get('/veiculos', (req, res)=>{
     const sql = 'SELECT * FROM veiculos';
 
     connection.query(sql, (erro, resultados) =>{
@@ -89,18 +89,14 @@ server.delete('/veiculos/:id_veiculo', (req, res) =>{
             return res.status(500).json({error: erro.message});
         }
         return res.json({message: "Veículo deletado com sucesso",
-            id_veiculo: id_veiculo,
-            Modelo: Modelo,
-            Ano: Ano,
-            Placa: Placa,
-            Condicao: Condicao,
+            id_veiculo: id_veiculo
         });
     });
 });
 
 //Tabela clientes
 
-server.get('/clientes', (res, req) =>{
+server.get('/clientes', (req, res) =>{
     const sql = 'SELECT * FROM clientes';
 
     connection.query(sql, (erro, resultados) => {
@@ -112,7 +108,7 @@ server.get('/clientes', (res, req) =>{
     });
 });
 
-server.get('/clientes/:CPF_CNPJ', (res, req) => {
+server.get('/clientes/:CPF_CNPJ', (req, res) => {
     const CPF_CNPJ = req.params.CPF_CNPJ;
 
     const sql = 'SELECT * FROM clientes WHERE CPF_CNPJ = ?';
@@ -187,21 +183,18 @@ server.delete('/clientes/:id_cliente', (req, res) =>{
         return res.json({
             message: "Cliente deletado com sucesso",
             id_cliente: id_cliente,
-            Nome: Nome,
-            CPF_CNPJ: CPF_CNPJ,
-            CNH : CNH,
         });
     });
 });
 
 //Tabela locações
 
-server.get('/locacao', (res, req) =>{
-    const sql = 'SELECT * FROM locacoes';
+server.get('/locacao', (req, res) =>{
+    const sql = 'SELECT * FROM locacao';
 
     connection.query(sql, (erro, resultados)=> {
         if(erro){
-            console.error("Erro ao consultar as locações: ", erro);
+            console.error("Erro ao consultar as locação: ", erro);
             return res.status(500).json({error: erro.message});
         }
         return res.json(resultados);
@@ -211,14 +204,19 @@ server.get('/locacao', (res, req) =>{
 server.get('/locacao/clientes/:CPF_CNPJ', (req, res) => {
     const CPF_CNPJ = req.params.CPF_CNPJ;
 
-    const sql = 'SELECT * FROM locacoes WHERE id_cliente = ?';
+    const sql = `
+        SELECT l.* 
+        FROM locacao l
+        JOIN clientes c ON l.id_cliente = c.id_cliente
+        WHERE c.CPF_CNPJ = ?
+    `;
 
     connection.query(sql, [CPF_CNPJ], (erro, resultados) => {
         if(erro){
             console.error("Erro ao consultar a locação: ", erro);
             return res.status(500).json({error: erro.message});
         }
-        return res.json(resultados[0]);
+        return res.json(resultados);
     });
 });
 
@@ -316,6 +314,6 @@ server.delete('/locacao/:id_locacao', (req, res) => {
     }); 
 });
 
-server.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+server.listen(5000, () => {
+    console.log("Servidor rodando na porta 5000");
 });
