@@ -1,5 +1,5 @@
-const express = requie('express');
-const connection = require(".db");
+const express = require('express');
+const connection = require("./db");
 const cors = require("cors");
 const server = express();
 
@@ -8,7 +8,7 @@ server.use(express.json());
 
 //Tabela veículos
 
-server.get('/veiculos', (res, req)=>{
+server.get('/veiculos', (req, res)=>{
     const sql = 'SELECT * FROM veiculos';
 
     connection.query(sql, (erro, resultados) =>{
@@ -89,18 +89,14 @@ server.delete('/veiculos/:id_veiculo', (req, res) =>{
             return res.status(500).json({error: erro.message});
         }
         return res.json({message: "Veículo deletado com sucesso",
-            id_veiculo: id_veiculo,
-            Modelo: Modelo,
-            Ano: Ano,
-            Placa: Placa,
-            Condicao: Condicao,
+            id_veiculo: id_veiculo
         });
     });
 });
 
 //Tabela clientes
 
-server.get('/clientes', (res, req) =>{
+server.get('/clientes', (req, res) =>{
     const sql = 'SELECT * FROM clientes';
 
     connection.query(sql, (erro, resultados) => {
@@ -112,7 +108,7 @@ server.get('/clientes', (res, req) =>{
     });
 });
 
-server.get('/clientes/:CPF_CNPJ', (res, req) => {
+server.get('/clientes/:CPF_CNPJ', (req, res) => {
     const CPF_CNPJ = req.params.CPF_CNPJ;
 
     const sql = 'SELECT * FROM clientes WHERE CPF_CNPJ = ?';
@@ -148,3 +144,4 @@ server.post('/clientes', (req, res) => {
         });
     });
 });
+
