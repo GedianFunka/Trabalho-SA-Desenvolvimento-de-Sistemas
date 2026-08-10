@@ -314,6 +314,58 @@ server.delete('/locacao/:id_locacao', (req, res) => {
     }); 
 });
 
+server.post('/cadastro', (req, res) => {
+    const {usuario, email, senha} = req.body;
+
+    if(senha && senha.length > 10){
+        return res.status(400).json({erro: "A senha pode ter no maximo 10 caracteres"})
+
+    }
+
+    const sql = 'INSERT INTO usuario(Usuario, Email, Senha) VALUES (?,?,?)';
+
+    connection.query(sql, [usuario, email, senha], (erro, resultado) => {
+        if(erro){
+            if(erro.code === 'ER_DUP_ENTRY'){
+                return res.status(400).json({erro: "Email ja cadastrado"})
+            }
+            console.error("Erro ao cadastrar usuario:", erro)
+            return res.status(500).json({erro: erro.message})
+        }
+        return res.json({
+            message: "Usuario cadastrado com sucesso",
+            id_usuarios: resultado.insertId
+        });
+    });
+});
+
+server.post('/login',(req, res) =>{
+    const {login, senha} = req.body;
+
+    const sql = 'SELECT * FROM usuario WHERE (Email = ? OR Usuario = ?) AND Senha = ?'
+
+    connection.query(sql, [login, login, senha], (erro, resultado)=>{
+    
+        if(erro){
+            console.error("Erro ao fazer login: ", erro);
+            return res.status(500).json({error: erro.message});
+        }
+        if(resultado.length === 0){
+            return res.status(401).json({erro: "Usuario/email ou senha invalidos"})
+        }
+
+        const UsuarioEncontrado = resultado[0];
+
+        const EAdmin = (UsuarioEncontrado.Email === 'admin@locadora.com' || UsuarioEncontrado.Usuario === 'Administrador');
+
+        return res.json({
+            message: "Login realizado com sucesso",
+            EAdmin: EAdmin,
+            usuario: UsuarioEncontrado.Usuario
+        });
+    });
+});
+
 server.listen(5000, () => {
     console.log("Servidor rodando na porta 5000");
 });
