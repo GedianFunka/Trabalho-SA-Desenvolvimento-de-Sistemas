@@ -18,4 +18,47 @@
           <a href="cadastrar.html">Cadastrar</a>
         </nav>
       </div>
+
+      <main>
+        <h1>Entrar</h1>
+
+        <form>
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seuemail@move.com.br" />
+
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" placeholder="Digite sua senha" />
+
+          <button type="submit">Entrar</button>
+        </form>
+
+        <h1>Cadastrar Veículo</h1>
+
+        <form>
+          <label for="model">Modelo</label>
+          <input type="text" id="model" name="model" placeholder="Ex.: Honda Civic" />
+
+          <label for="plate">Placa</label>
+          <input type="text" id="plate" name="plate" placeholder="Ex.: MNO-2468" />
+
+          <label for="category">Categoria</label>
+          <input type="text" id="category" name="category" placeholder="Ex.: SUV" />
+
+          <label for="price">Diária</label>
+          <input type="text" id="price" name="price" placeholder="Ex.: R$ 210,00" />
+
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="available" selected>Disponível</option>
+            <option value="rented">Alugado</option>
+            <option value="maintenance">Manutenção</option>
+          </select>
+
+          <button type="submit">Cadastrar</button>
+        </form>
+      </main>
+
+      <footer>© 2026 Move Locadora. Todos os direitos reservados.</footer>
+    </html>
+  </body>
 </html>
