@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (linkEntrar) linkEntrar.remove();
             if (linkCadastrar) linkCadastrar.remove();
 
-            // Adiciona o botão de Sair
             if (!document.getElementById('btnSair')) {
                 const linkSair = document.createElement('a');
                 linkSair.href = '#';
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-//CADASTRO DE USUÁRIO (cadastrar.html)
+//CADASTRO DE USUÁRIO 
 const formCadastro = document.getElementById('formCadastro');
 
 if (formCadastro) {
@@ -81,7 +80,7 @@ if (formCadastro) {
     });
 }
 
-//LOGIN DE USUÁRIO (entrar.html)
+//LOGIN DE USUÁRIO
 const formLogin = document.getElementById('formLogin');
 
 if (formLogin) {
@@ -248,7 +247,7 @@ if (tabelaCarros) {
 }
 
 
-//ATUALIZAR E EXCLUIR VEÍCULO (editar.html)
+//ATUALIZAR E EXCLUIR VEÍCULO 
 const formEditar = document.getElementById('formEditar');
 const btnExcluir = document.getElementById('btnExcluir');
 
@@ -315,7 +314,7 @@ if (formEditar) {
     }
 }
 
-//CONSULTA FLEXÍVEL (consultar.html)
+//CONSULTA FLEXÍVEL 
 const formConsultar = document.getElementById('formConsultar');
 
 if (formConsultar) {
@@ -360,7 +359,7 @@ if (formConsultar) {
     });
 }
 
-//ADICIONAR NOVO VEÍCULO (editar.html)
+//ADICIONAR NOVO VEÍCULO 
 const formAdicionarVeiculo = document.getElementById('formAdicionarVeiculo');
 
 if (formAdicionarVeiculo) {
