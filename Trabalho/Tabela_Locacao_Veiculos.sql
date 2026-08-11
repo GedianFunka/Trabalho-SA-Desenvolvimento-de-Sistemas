@@ -47,3 +47,5 @@ insert into usuario(Usuario, Email, Senha)
 values ('Administrador','admin@locadora.com','Admin123');
 
 ALTER TABLE veiculos MODIFY COLUMN Condicao VARCHAR(50);
+
+ALTER TABLE veiculos ADD COLUMN Preco_Diaria DECIMAL(10,2) DEFAULT 0.00;

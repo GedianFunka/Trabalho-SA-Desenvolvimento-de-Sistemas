@@ -30,10 +30,43 @@
               <th>Placa</th>
               <th>Ano</th>
               <th>Condição</th>
+              <th>Preço/Dia</th>
+              <th>Ação</th>
             </tr>
           </thead>
           <tbody id="tabelaCarros"></tbody>
         </table>
+
+        <!-- Modal Alugar -->
+        <div id="modalAlugar" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Informações do Cliente</h2>
+            <form id="formModalAlugar">
+              <input type="hidden" id="modalIdVeiculo" />
+
+              <label for="modalNome">Nome:</label>
+              <input type="text" id="modalNome" required />
+
+              <label for="modalIdade">Idade:</label>
+              <input type="number" id="modalIdade" required />
+
+              <label for="modalCPF">CPF/CNPJ:</label>
+              <input type="text" id="modalCPF" required />
+
+              <label for="modalCNH">CNH:</label>
+              <input type="text" id="modalCNH" required />
+
+              <label for="modalTelefone">Telefone:</label>
+              <input type="text" id="modalTelefone" required />
+
+              <label for="modalCidade">Cidade:</label>
+              <input type="text" id="modalCidade" required />
+
+              <button type="submit">Confirmar Aluguel</button>
+            </form>
+          </div>
+        </div>
       </main>
 
       <footer>© 2026 Move Locadora. Todos os direitos reservados.</footer>

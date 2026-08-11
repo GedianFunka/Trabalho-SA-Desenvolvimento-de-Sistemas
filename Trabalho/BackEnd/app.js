@@ -36,11 +36,11 @@ server.get('/veiculos/:Placa', (req, res) => {
 });
 
 server.post('/veiculos',(req, res) => {
-    const{Modelo, Ano, Placa, Condicao} = req.body;
+    const{Modelo, Ano, Placa, Condicao, Preco_Diaria} = req.body;
 
-    const sql = 'INSERT INTO veiculos (Modelo, Ano, Placa, Condicao) VALUES (?, ?, ?, ?)';
+    const sql = 'INSERT INTO veiculos (Modelo, Ano, Placa, Condicao, Preco_Diaria) VALUES (?, ?, ?, ?, ?)';
 
-    connection.query(sql, [Modelo, Ano, Placa, Condicao], (erro, resultados) =>{
+    connection.query(sql, [Modelo, Ano, Placa, Condicao, Preco_Diaria], (erro, resultados) =>{
         if(erro){
             console.error("Erro ao inserir o veículo: ", erro)
             return res.status(500).json({error: erro.message});
@@ -52,17 +52,18 @@ server.post('/veiculos',(req, res) => {
             Ano: Ano,
             Placa: Placa,
             Condicao: Condicao,
+            Preco_Diaria: Preco_Diaria,
         });
     });
 });
 
 server.put('/veiculos/:id_veiculo',(req, res) =>{
     const { id_veiculo } = req.params;
-    const { Modelo, Ano, Placa, Condicao } = req.body;
+    const { Modelo, Ano, Placa, Condicao, Preco_Diaria } = req.body;
 
-    const sql = 'UPDATE veiculos SET Modelo = ?, Ano = ?, Placa = ?, Condicao = ? WHERE id_veiculo = ?';
+    const sql = 'UPDATE veiculos SET Modelo = ?, Ano = ?, Placa = ?, Condicao = ?, Preco_Diaria = ? WHERE id_veiculo = ?';
 
-    connection.query(sql, [Modelo, Ano, Placa, Condicao, id_veiculo], (erro, resultados) => {
+    connection.query(sql, [Modelo, Ano, Placa, Condicao, Preco_Diaria, id_veiculo], (erro, resultados) => {
         if(erro){
             console.error("Erro ao atualizar o veículo: ", erro);
             return res.status(500).json({error: erro.message});
@@ -74,6 +75,28 @@ server.put('/veiculos/:id_veiculo',(req, res) =>{
             Ano: Ano,
             Placa: Placa,
             Condicao: Condicao,
+            Preco_Diaria: Preco_Diaria,
+        });
+    });
+});
+
+server.post('/alugar', (req, res) => {
+    const { id_veiculo } = req.body;
+
+    const sql = "UPDATE veiculos SET Condicao = 'Indisponível' WHERE id_veiculo = ?";
+
+    connection.query(sql, [id_veiculo], (erro, resultados) => {
+        if(erro){
+            console.error("Erro ao alugar o veículo: ", erro);
+            return res.status(500).json({error: erro.message});
+        }
+        if(resultados.affectedRows === 0) {
+            return res.status(404).json({error: "Veículo não encontrado."});
+        }
+        return res.json({
+            message: "Veículo alugado com sucesso",
+            id_veiculo: id_veiculo,
+            Condicao: 'Indisponível'
         });
     });
 });

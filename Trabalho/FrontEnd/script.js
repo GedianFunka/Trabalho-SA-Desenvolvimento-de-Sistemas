@@ -149,14 +149,38 @@ if (tabelaCarros) {
                 const placa = v.Placa || v.placa || '-';
                 const ano = v.Ano || v.ano || '-';
                 const condicao = v.Condicao || v.condicao || '-';
+                const precoDiaria = v.Preco_Diaria || v.preco_diaria || 0;
+                const precoFormatado = Number(precoDiaria).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                const indisponivel = condicao.toLowerCase() === 'indisponível' || condicao.toLowerCase() === 'alugado';
+                const disableAttr = indisponivel ? 'disabled' : '';
 
                 linha.innerHTML = `
                     <td>${modelo}</td>
                     <td>${placa}</td>
                     <td>${ano}</td>
                     <td>${condicao}</td>
+                    <td>${precoFormatado}</td>
+                    <td>
+                        <button class="btnAlugar" data-id="${v.id_veiculo}" ${disableAttr}>Alugar</button>
+                    </td>
                 `;
                 tabelaCarros.appendChild(linha);
+            });
+
+            document.querySelectorAll('.btnAlugar').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const usuarioLogado = localStorage.getItem('usuarioLogado');
+                    if (!usuarioLogado) {
+                        alert('Você precisa fazer login para alugar um veículo.');
+                        window.location.href = 'entrar.html';
+                        return;
+                    }
+
+                    const idVeiculo = e.target.getAttribute('data-id');
+                    document.getElementById('modalIdVeiculo').value = idVeiculo;
+                    document.getElementById('modalAlugar').style.display = 'block';
+                });
             });
         } catch (erro) {
             console.error('Erro ao buscar veículos:', erro);
@@ -165,6 +189,62 @@ if (tabelaCarros) {
     }
 
     carregarVeiculos();
+
+    // MODAL ALUGAR
+    const modalAlugar = document.getElementById('modalAlugar');
+    const closeModal = document.getElementById('closeModal');
+    const formModalAlugar = document.getElementById('formModalAlugar');
+
+    if (modalAlugar) {
+        closeModal.onclick = () => {
+            modalAlugar.style.display = "none";
+        }
+
+        window.onclick = (event) => {
+            if (event.target == modalAlugar) {
+                modalAlugar.style.display = "none";
+            }
+        }
+
+        formModalAlugar.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const idVeiculo = document.getElementById('modalIdVeiculo').value;
+            const Nome = document.getElementById('modalNome').value;
+            const Idade = document.getElementById('modalIdade').value;
+            const CPF_CNPJ = document.getElementById('modalCPF').value;
+            const CNH = document.getElementById('modalCNH').value;
+            const Telefone = document.getElementById('modalTelefone').value;
+            const Cidade = document.getElementById('modalCidade').value;
+
+            try {
+                await fetch('http://localhost:5000/clientes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Nome, Idade, CPF_CNPJ, CNH, Telefone, Cidade })
+                });
+
+                const res = await fetch('http://localhost:5000/alugar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_veiculo: idVeiculo })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert(data.message || 'Veículo alugado com sucesso!');
+                    modalAlugar.style.display = "none";
+                    formModalAlugar.reset();
+                    carregarVeiculos();
+                } else {
+                    alert(data.error || 'Erro ao alugar veículo.');
+                }
+            } catch (err) {
+                console.error('Erro:', err);
+                alert('Erro de conexão com o backend.');
+            }
+        });
+    }
 }
 
 
@@ -181,12 +261,13 @@ if (formEditar) {
         const Ano = document.getElementById('Ano').value;
         const Placa = document.getElementById('Placa').value;
         const Condicao = document.getElementById('Condicao').value;
+        const Preco_Diaria = document.getElementById('Preco_Diaria').value;
 
         try {
             const resposta = await fetch(`http://localhost:5000/veiculos/${id_veiculo}`, {
                 method: 'PUT',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ Modelo, Ano, Placa, Condicao })
+                body: JSON.stringify({ Modelo, Ano, Placa, Condicao, Preco_Diaria })
             });
 
             const dados = await resposta.json();
@@ -290,12 +371,13 @@ if (formAdicionarVeiculo) {
         const Ano = document.getElementById('cadAno').value;
         const Placa = document.getElementById('cadPlaca').value;
         const Condicao = document.getElementById('cadCondicao').value;
+        const Preco_Diaria = document.getElementById('cadPrecoDiaria').value;
 
         try {
             const resposta = await fetch('http://localhost:5000/veiculos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ Modelo, Ano, Placa, Condicao })
+                body: JSON.stringify({ Modelo, Ano, Placa, Condicao, Preco_Diaria })
             });
 
             const dados = await resposta.json();
