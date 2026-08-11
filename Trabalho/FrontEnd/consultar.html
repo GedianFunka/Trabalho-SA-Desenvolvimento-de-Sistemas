@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Move | Locadora de Veículos</title>
+    <title>Move | Consultar Veículos</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <html class="container">
+    <div class="container">
       <div>
         <h1>Move Locadora</h1>
         <nav>
@@ -18,63 +19,38 @@
           <a href="cadastrar.html">Cadastrar</a>
         </nav>
       </div>
-    </html>
 
-    <main>
-      <h1>Veículos Disponíveis</h1>
+      <main>
+        <h1>Consultar Veículos</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Modelo</th>
-            <th>Placa</th>
-            <th>Categoria</th>
-            <th>Diária</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Volkswagen Gol</td>
-            <td>ABC-1234</td>
-            <td>Hatch</td>
-            <td>R$ 120,00</td>
-            <td>Disponível</td>
-          </tr>
-          <tr>
-            <td>Chevrolet Onix</td>
-            <td>DEF-5678</td>
-            <td>Sedan</td>
-            <td>R$ 150,00</td>
-            <td>Disponível</td>
-          </tr>
-          <tr>
-            <td>Fiat Uno</td>
-            <td>GHI-9012</td>
-            <td>Popular</td>
-            <td>R$ 110,00</td>
-            <td>Alugado</td>
-          </tr>
-          <tr>
-            <td>Renault Logan</td>
-            <td>JKL-3456</td>
-            <td>Sedan</td>
-            <td>R$ 160,00</td>
-            <td>Disponível</td>
-          </tr>
-        </tbody>
-      </table>
+        <form id="formConsultar">
+          <label for="search"
+            >Pesquisar por Modelo, Placa, Ano ou Condição:</label
+          >
+          <input
+            type="text"
+            id="search"
+            placeholder="Ex: Corolla, 2023, Disponível"
+          />
+          <button type="submit">Buscar</button>
+        </form>
 
-      <h1>Consultar Veículo</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Modelo</th>
+              <th>Placa</th>
+              <th>Ano</th>
+              <th>Condição</th>
+            </tr>
+          </thead>
+          <tbody id="resultadoConsulta"></tbody>
+        </table>
+      </main>
 
-      <form>
-        <label for="search">Placa ou modelo</label>
-        <input type="text" id="search" name="search" placeholder="Digite a placa ou o modelo" />
+      <footer>© 2026 Move Locadora. Todos os direitos reservados.</footer>
+    </div>
 
-        <button type="submit">Consultar</button>
-      </form>
-    </main>
-
-    <footer>© 2026 Move Locadora. Todos os direitos reservados.</footer>
+    <script src="script.js"></script>
   </body>
 </html>

@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Move | Locadora de Veículos</title>
+    <title>Move | Painel Admin</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <html class="container">
+    <div class="container">
       <div>
-        <h1>Move Locadora</h1>
+        <h1>Move Locadora - Painel Admin</h1>
         <nav>
           <a href="index.html">Início</a>
           <a href="listar.html">Listar</a>
@@ -20,33 +21,71 @@
       </div>
 
       <main>
-        <h1>Editar Veículo</h1>
+        <h2>Cadastrar Novo Veículo</h2>
+        <form id="formAdicionarVeiculo">
+          <label for="cadModelo">Modelo:</label>
+          <input
+            type="text"
+            id="cadModelo"
+            placeholder="Ex: Toyota Corolla"
+            required
+          />
 
-        <form>
-          <label for="model">Modelo</label>
-          <input type="text" id="model" name="model" value="Toyota Corolla" />
+          <label for="cadAno">Ano:</label>
+          <input type="number" id="cadAno" placeholder="Ex: 2023" required />
 
-          <label for="plate">Placa</label>
-          <input type="text" id="plate" name="plate" value="XYZ-9876" />
+          <label for="cadPlaca">Placa:</label>
+          <input
+            type="text"
+            id="cadPlaca"
+            placeholder="Ex: ABC-1234"
+            required
+          />
 
-          <label for="category">Categoria</label>
-          <input type="text" id="category" name="category" value="Sedan" />
+          <label for="cadCondicao">Condição:</label>
+          <input
+            type="text"
+            id="cadCondicao"
+            placeholder="Ex: Novo, Usado ou Seminovo"
+            required
+          />
 
-          <label for="price">Diária</label>
-          <input type="text" id="price" name="price" value="R$ 180,00" />
+          <button type="submit">Cadastrar Veículo</button>
+        </form>
 
-          <label for="status">Status</label>
-          <select id="status" name="status">
-            <option value="available" selected>Disponível</option>
-            <option value="rented">Alugado</option>
-            <option value="maintenance">Manutenção</option>
-          </select>
+        <br />
+        <hr />
+        <br />
 
-          <button type="submit">Salvar</button>
+        <h2>Atualizar ou Excluir Veículo Existente</h2>
+        <form id="formEditar">
+          <label for="id_veiculo">ID do veículo:</label>
+          <input type="number" id="id_veiculo" placeholder="Ex: 1" required />
+
+          <label for="Modelo">Modelo:</label>
+          <input type="text" id="Modelo" placeholder="Ex: Toyota Corolla" />
+
+          <label for="Ano">Ano:</label>
+          <input type="number" id="Ano" placeholder="Ex: 2023" />
+
+          <label for="Placa">Placa:</label>
+          <input type="text" id="Placa" placeholder="Ex: ABC-1234" />
+
+          <label for="Condicao">Condição:</label>
+          <input
+            type="text"
+            id="Condicao"
+            placeholder="Ex: Novo, Usado ou Seminovo"
+          />
+
+          <button type="submit">Salvar Alterações</button>
+          <button id="btnExcluir" type="button">Excluir Veículo</button>
         </form>
       </main>
 
-      <footer>© 2026 Move Locadora. Todos os direitos reservados.</footer>
-    </html>
+      <footer>© 2026 Move Locadora. Painel Administrativo.</footer>
+    </div>
+
+    <script src="script.js"></script>
   </body>
 </html>

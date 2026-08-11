@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Move | Locadora de Veículos</title>
+    <title>Move | Cadastrar</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <html class="container">
+    <div class="container">
       <div>
         <h1>Move Locadora</h1>
         <nav>
@@ -20,45 +21,46 @@
       </div>
 
       <main>
-        <h1>Entrar</h1>
+        <h1>Criar Conta</h1>
 
-        <form>
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seuemail@move.com.br" />
+        <form id="formCadastro">
+          <label for="usuario">Nome do usuario:</label>
+          <input
+            type="text"
+            id="usuario"
+            name="usuario"
+            placeholder="Ex: GedianFunka"
+            required
+          />
 
-          <label for="password">Senha</label>
-          <input type="password" id="password" name="password" placeholder="Digite sua senha" />
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Ex:gedianfunka@gmail.com"
+            required
+          />
 
-          <button type="submit">Entrar</button>
-        </form>
-
-        <h1>Cadastrar Veículo</h1>
-
-        <form>
-          <label for="model">Modelo</label>
-          <input type="text" id="model" name="model" placeholder="Ex.: Honda Civic" />
-
-          <label for="plate">Placa</label>
-          <input type="text" id="plate" name="plate" placeholder="Ex.: MNO-2468" />
-
-          <label for="category">Categoria</label>
-          <input type="text" id="category" name="category" placeholder="Ex.: SUV" />
-
-          <label for="price">Diária</label>
-          <input type="text" id="price" name="price" placeholder="Ex.: R$ 210,00" />
-
-          <label for="status">Status</label>
-          <select id="status" name="status">
-            <option value="available" selected>Disponível</option>
-            <option value="rented">Alugado</option>
-            <option value="maintenance">Manutenção</option>
-          </select>
+          <label for="senha">Senha:</label>
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            maxlength="10"
+            placeholder="Ex: 0123456789"
+            required
+          />
 
           <button type="submit">Cadastrar</button>
         </form>
+
+        <p>Já tem uma conta? <a href="entrar.html">Faça login</a></p>
       </main>
 
       <footer>© 2026 Move Locadora. Todos os direitos reservados.</footer>
-    </html>
+    </div>
+
+    <script src="script.js"></script>
   </body>
 </html>

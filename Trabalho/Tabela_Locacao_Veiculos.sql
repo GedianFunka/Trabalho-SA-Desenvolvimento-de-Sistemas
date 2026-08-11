@@ -45,3 +45,5 @@ create table usuario(
 );
 insert into usuario(Usuario, Email, Senha)
 values ('Administrador','admin@locadora.com','Admin123');
+
+ALTER TABLE veiculos MODIFY COLUMN Condicao VARCHAR(50);
