@@ -20,8 +20,16 @@ body {
     flex-direction: column;
 }
 
+.logo {
+    display: block;
+    max-width: 140px;
+    margin: 0 auto 12px;
+    border-radius: 8px;
+}
+
 h1, h2 {
     color: #1392E4;
+    text-align: center;
 }
 
 nav {
@@ -29,6 +37,7 @@ nav {
     padding: 15px;
     margin-bottom: 30px;
     border-radius: 5px;
+    text-align: center;
 }
 
 nav a {

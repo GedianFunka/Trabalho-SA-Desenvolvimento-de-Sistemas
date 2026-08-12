@@ -1,10 +1,27 @@
 const express = require('express');
 const connection = require("./db");
 const cors = require("cors");
+const multer = require('multer');
+const path = require('path');
 const server = express();
-
+ 
 server.use(cors());
 server.use(express.json());
+ 
+// Configuração de upload de imagens
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const nomeUnico = Date.now() + '-' + Math.round(Math.random() * 1e9) + path.extname(file.originalname);
+        cb(null, nomeUnico);
+    }
+});
+ 
+const upload = multer({ storage });
+ 
+server.use('/uploads', express.static('uploads'));
 
 //Tabela veículos
 
@@ -35,15 +52,16 @@ server.get('/veiculos/:Placa', (req, res) => {
     });
 });
 
-server.post('/veiculos',(req, res) => {
-    const{Modelo, Ano, Placa, Condicao, Preco_Diaria} = req.body;
-
-    const sql = 'INSERT INTO veiculos (Modelo, Ano, Placa, Condicao, Preco_Diaria) VALUES (?, ?, ?, ?, ?)';
-
-    connection.query(sql, [Modelo, Ano, Placa, Condicao, Preco_Diaria], (erro, resultados) =>{
-        if(erro){
+server.post('/veiculos', upload.single('imagem'), (req, res) => {
+    const { Modelo, Ano, Placa, Condicao, Preco_Diaria } = req.body;
+    const Imagem = req.file ? `/uploads/${req.file.filename}` : null;
+ 
+    const sql = 'INSERT INTO veiculos (Modelo, Ano, Placa, Condicao, Preco_Diaria, Imagem) VALUES (?, ?, ?, ?, ?, ?)';
+ 
+    connection.query(sql, [Modelo, Ano, Placa, Condicao, Preco_Diaria, Imagem], (erro, resultados) => {
+        if (erro) {
             console.error("Erro ao inserir o veículo: ", erro)
-            return res.status(500).json({error: erro.message});
+            return res.status(500).json({ error: erro.message });
         }
         return res.json({
             message: "Veículo inserido com sucesso",
@@ -53,31 +71,49 @@ server.post('/veiculos',(req, res) => {
             Placa: Placa,
             Condicao: Condicao,
             Preco_Diaria: Preco_Diaria,
+            Imagem: Imagem,
         });
     });
 });
-
-server.put('/veiculos/:id_veiculo',(req, res) =>{
+ 
+server.put('/veiculos/:id_veiculo', upload.single('imagem'), (req, res) => {
     const { id_veiculo } = req.params;
     const { Modelo, Ano, Placa, Condicao, Preco_Diaria } = req.body;
-
-    const sql = 'UPDATE veiculos SET Modelo = ?, Ano = ?, Placa = ?, Condicao = ?, Preco_Diaria = ? WHERE id_veiculo = ?';
-
-    connection.query(sql, [Modelo, Ano, Placa, Condicao, Preco_Diaria, id_veiculo], (erro, resultados) => {
-        if(erro){
-            console.error("Erro ao atualizar o veículo: ", erro);
-            return res.status(500).json({error: erro.message});
-        }
-        return res.json({
-            message: "Veículo atualizado com sucesso",
-            id_veiculo: id_veiculo,
-            Modelo: Modelo,
-            Ano: Ano,
-            Placa: Placa,
-            Condicao: Condicao,
-            Preco_Diaria: Preco_Diaria,
+ 
+    if (req.file) {
+        const Imagem = `/uploads/${req.file.filename}`;
+        atualizarVeiculo(Imagem);
+    } else {
+        connection.query('SELECT Imagem FROM veiculos WHERE id_veiculo = ?', [id_veiculo], (erro, resultados) => {
+            if (erro) {
+                console.error("Erro ao buscar imagem atual: ", erro);
+                return res.status(500).json({ error: erro.message });
+            }
+            const ImagemAtual = resultados[0] ? resultados[0].Imagem : null;
+            atualizarVeiculo(ImagemAtual);
         });
-    });
+    }
+ 
+    function atualizarVeiculo(Imagem) {
+        const sql = 'UPDATE veiculos SET Modelo = ?, Ano = ?, Placa = ?, Condicao = ?, Preco_Diaria = ?, Imagem = ? WHERE id_veiculo = ?';
+ 
+        connection.query(sql, [Modelo, Ano, Placa, Condicao, Preco_Diaria, Imagem, id_veiculo], (erro, resultados) => {
+            if (erro) {
+                console.error("Erro ao atualizar o veículo: ", erro);
+                return res.status(500).json({ error: erro.message });
+            }
+            return res.json({
+                message: "Veículo atualizado com sucesso",
+                id_veiculo: id_veiculo,
+                Modelo: Modelo,
+                Ano: Ano,
+                Placa: Placa,
+                Condicao: Condicao,
+                Preco_Diaria: Preco_Diaria,
+                Imagem: Imagem,
+            });
+        });
+    }
 });
 
 server.post('/alugar', (req, res) => {

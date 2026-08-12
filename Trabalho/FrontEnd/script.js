@@ -120,41 +120,48 @@ if (formLogin) {
     });
 }
 
+//LISTAGEM DE VEÍCULOS
 const tabelaCarros = document.getElementById('tabelaCarros');
-
+ 
 if (tabelaCarros) {
     async function carregarVeiculos() {
         try {
             const resposta = await fetch('http://localhost:5000/veiculos');
-
+ 
             if (!resposta.ok) {
-                tabelaCarros.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#ef4444;">Erro ao buscar dados do servidor.</td></tr>';
+                tabelaCarros.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#ef4444;">Erro ao buscar dados do servidor.</td></tr>';
                 return;
             }
-
+ 
             const veiculos = await resposta.json();
-
+ 
             tabelaCarros.innerHTML = '';
-
+ 
             if (!Array.isArray(veiculos) || veiculos.length === 0) {
-                tabelaCarros.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhum veículo cadastrado no sistema.</td></tr>';
+                tabelaCarros.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhum veículo cadastrado no sistema.</td></tr>';
                 return;
             }
-
+ 
             veiculos.forEach(v => {
                 const linha = document.createElement('tr');
-                
+ 
                 const modelo = v.Modelo || v.modelo || '-';
                 const placa = v.Placa || v.placa || '-';
                 const ano = v.Ano || v.ano || '-';
                 const condicao = v.Condicao || v.condicao || '-';
                 const precoDiaria = v.Preco_Diaria || v.preco_diaria || 0;
                 const precoFormatado = Number(precoDiaria).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
+ 
+                const imagem = v.Imagem || v.imagem;
+                const imagemHtml = imagem
+                    ? `<img src="http://localhost:5000${imagem}" alt="${modelo}" style="width:80px; height:60px; object-fit:cover; border-radius:6px;">`
+                    : `<span style="color:#94a3b8;">Sem imagem</span>`;
+ 
                 const indisponivel = condicao.toLowerCase() === 'indisponível' || condicao.toLowerCase() === 'alugado';
                 const disableAttr = indisponivel ? 'disabled' : '';
-
+ 
                 linha.innerHTML = `
+                    <td>${imagemHtml}</td>
                     <td>${modelo}</td>
                     <td>${placa}</td>
                     <td>${ano}</td>
@@ -166,7 +173,7 @@ if (tabelaCarros) {
                 `;
                 tabelaCarros.appendChild(linha);
             });
-
+ 
             document.querySelectorAll('.btnAlugar').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const usuarioLogado = localStorage.getItem('usuarioLogado');
@@ -175,7 +182,7 @@ if (tabelaCarros) {
                         window.location.href = 'entrar.html';
                         return;
                     }
-
+ 
                     const idVeiculo = e.target.getAttribute('data-id');
                     document.getElementById('modalIdVeiculo').value = idVeiculo;
                     document.getElementById('modalAlugar').style.display = 'block';
@@ -183,10 +190,10 @@ if (tabelaCarros) {
             });
         } catch (erro) {
             console.error('Erro ao buscar veículos:', erro);
-            tabelaCarros.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#ef4444;">Erro de conexão com o backend.</td></tr>';
+            tabelaCarros.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#ef4444;">Erro de conexão com o backend.</td></tr>';
         }
     }
-
+ 
     carregarVeiculos();
 
     // MODAL ALUGAR
@@ -247,30 +254,36 @@ if (tabelaCarros) {
 }
 
 
-//ATUALIZAR E EXCLUIR VEÍCULO 
+//ATUALIZAR E EXCLUIR VEÍCULO
 const formEditar = document.getElementById('formEditar');
 const btnExcluir = document.getElementById('btnExcluir');
-
+ 
 if (formEditar) {
     formEditar.addEventListener('submit', async (event) => {
         event.preventDefault();
-
+ 
         const id_veiculo = document.getElementById('id_veiculo').value;
-        const Modelo = document.getElementById('Modelo').value;
-        const Ano = document.getElementById('Ano').value;
-        const Placa = document.getElementById('Placa').value;
-        const Condicao = document.getElementById('Condicao').value;
-        const Preco_Diaria = document.getElementById('Preco_Diaria').value;
-
+ 
+        const formData = new FormData();
+        formData.append('Modelo', document.getElementById('Modelo').value);
+        formData.append('Ano', document.getElementById('Ano').value);
+        formData.append('Placa', document.getElementById('Placa').value);
+        formData.append('Condicao', document.getElementById('Condicao').value);
+        formData.append('Preco_Diaria', document.getElementById('Preco_Diaria').value);
+ 
+        const imagemInput = document.getElementById('inputImagemEditar');
+        if (imagemInput && imagemInput.files[0]) {
+            formData.append('imagem', imagemInput.files[0]);
+        }
+ 
         try {
             const resposta = await fetch(`http://localhost:5000/veiculos/${id_veiculo}`, {
                 method: 'PUT',
-                headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ Modelo, Ano, Placa, Condicao, Preco_Diaria })
+                body: formData
             });
-
+ 
             const dados = await resposta.json();
-
+ 
             if (resposta.ok) {
                 alert(dados.message || 'Veículo atualizado com sucesso!');
             } else {
@@ -281,24 +294,24 @@ if (formEditar) {
             alert('Erro de conexão com o backend.');
         }
     });
-
+ 
     if (btnExcluir) {
         btnExcluir.addEventListener('click', async () => {
             const id_veiculo = document.getElementById('id_veiculo').value;
-
+ 
             if (!id_veiculo) {
                 alert('Informe o ID do veículo para excluir.');
                 return;
             }
-
+ 
             if (confirm(`Tem certeza que deseja excluir o veículo ID ${id_veiculo}?`)) {
                 try {
                     const resposta = await fetch(`http://localhost:5000/veiculos/${id_veiculo}`, {
                         method: 'DELETE'
                     });
-
+ 
                     const dados = await resposta.json();
-
+ 
                     if (resposta.ok) {
                         alert(dados.message || 'Veículo excluído com sucesso!');
                         formEditar.reset();
@@ -316,35 +329,42 @@ if (formEditar) {
 
 //CONSULTA FLEXÍVEL 
 const formConsultar = document.getElementById('formConsultar');
-
+ 
 if (formConsultar) {
     formConsultar.addEventListener('submit', async (event) => {
         event.preventDefault();
-
+ 
         const termo = document.getElementById('search').value.toLowerCase().trim();
         const tabelaResultado = document.getElementById('resultadoConsulta');
-
+ 
         try {
             const resposta = await fetch('http://localhost:5000/veiculos');
             const veiculos = await resposta.json();
-
-            const filtrados = veiculos.filter(v => 
+ 
+            const filtrados = veiculos.filter(v =>
                 String(v.Modelo || '').toLowerCase().includes(termo) ||
                 String(v.Placa || '').toLowerCase().includes(termo) ||
                 String(v.Ano || '').toLowerCase().includes(termo) ||
                 String(v.Condicao || '').toLowerCase().includes(termo)
             );
-
+ 
             tabelaResultado.innerHTML = '';
-
+ 
             if (filtrados.length === 0) {
-                tabelaResultado.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhum veículo encontrado com este critério.</td></tr>';
+                tabelaResultado.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum veículo encontrado com este critério.</td></tr>';
                 return;
             }
-
+ 
             filtrados.forEach(v => {
                 const linha = document.createElement('tr');
+ 
+                const imagem = v.Imagem || v.imagem;
+                const imagemHtml = imagem
+                    ? `<img src="http://localhost:5000${imagem}" alt="${v.Modelo}" style="width:80px; height:60px; object-fit:cover; border-radius:6px;">`
+                    : `<span style="color:#94a3b8;">Sem imagem</span>`;
+ 
                 linha.innerHTML = `
+                    <td>${imagemHtml}</td>
                     <td>${v.Modelo}</td>
                     <td>${v.Placa}</td>
                     <td>${v.Ano}</td>
@@ -359,28 +379,33 @@ if (formConsultar) {
     });
 }
 
-//ADICIONAR NOVO VEÍCULO 
+//ADICIONAR NOVO VEÍCULO (COM IMAGEM) 
 const formAdicionarVeiculo = document.getElementById('formAdicionarVeiculo');
-
+ 
 if (formAdicionarVeiculo) {
     formAdicionarVeiculo.addEventListener('submit', async (event) => {
         event.preventDefault();
-
-        const Modelo = document.getElementById('cadModelo').value;
-        const Ano = document.getElementById('cadAno').value;
-        const Placa = document.getElementById('cadPlaca').value;
-        const Condicao = document.getElementById('cadCondicao').value;
-        const Preco_Diaria = document.getElementById('cadPrecoDiaria').value;
-
+ 
+        const formData = new FormData();
+        formData.append('Modelo', document.getElementById('cadModelo').value);
+        formData.append('Ano', document.getElementById('cadAno').value);
+        formData.append('Placa', document.getElementById('cadPlaca').value);
+        formData.append('Condicao', document.getElementById('cadCondicao').value);
+        formData.append('Preco_Diaria', document.getElementById('cadPrecoDiaria').value);
+ 
+        const imagemInput = document.getElementById('inputImagem');
+        if (imagemInput.files[0]) {
+            formData.append('imagem', imagemInput.files[0]);
+        }
+ 
         try {
             const resposta = await fetch('http://localhost:5000/veiculos', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ Modelo, Ano, Placa, Condicao, Preco_Diaria })
+                body: formData
             });
-
+ 
             const dados = await resposta.json();
-
+ 
             if (resposta.ok) {
                 alert(dados.message || 'Veículo cadastrado com sucesso!');
                 formAdicionarVeiculo.reset();

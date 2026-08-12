@@ -55,9 +55,12 @@
           <input
             type="text"
             id="cadCondicao"
-            placeholder="Ex: Novo, Usado ou Seminovo"
+            placeholder="Ex: Disponível, Indisponível, Em manutenção"
             required
           />
+
+          <label for="inputImagem">Imagem do Veículo:</label>
+          <input type="file" id="inputImagem" accept="image/*" />
 
           <button type="submit">Cadastrar Veículo</button>
         </form>
@@ -87,8 +90,11 @@
           <input
             type="text"
             id="Condicao"
-            placeholder="Ex: Novo, Usado ou Seminovo"
+            placeholder="Ex: Disponível, Indisponível, Em manutenção"
           />
+
+          <label for="inputImagemEditar">Nova Imagem do Veículo (opcional):</label>
+          <input type="file" id="inputImagemEditar" accept="image/*" />
 
           <button type="submit">Salvar Alterações</button>
           <button id="btnExcluir" type="button">Excluir Veículo</button>
